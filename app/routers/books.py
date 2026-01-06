@@ -36,3 +36,22 @@ async def get_book_by_id(
 ) -> SBookRead:
     books = await BookRepository.fetch_one(db, id=book_id)
     return books
+
+
+@books_router.put("/{id}")
+async def edit_book(
+        book: SBookAdd,
+        book_id: int,
+        db: SessionDep
+) -> SBookRead:
+    book = await BookRepository.edit_one(book, db, id=book_id)
+    return book
+
+
+@books_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_book(
+        book_id: int,
+        db: SessionDep
+):
+    await BookRepository.delete_one(db, id=book_id)
+    return
