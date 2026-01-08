@@ -23,18 +23,22 @@ async def add_book(
 
 @books_router.get("")
 async def get_all_books(
-        db: SessionDep
+        db: SessionDep,
+        is_read: bool | None = None
 ) -> list[SBookRead]:
-    books = await BookRepository.find_all(db)
+    if is_read is not None:
+        books = await BookRepository.find_by_status(is_read, db)
+    else:
+        books = await BookRepository.find_all(db)
     return books
 
 
-@books_router.get("/{id}")
+@books_router.get("/{book_id}")
 async def get_book_by_id(
         book_id: int,
         db: SessionDep
 ) -> SBookRead:
-    books = await BookRepository.fetch_one(db, id=book_id)
+    books = await BookRepository.fetch_one(book_id, db)
     return books
 
 
@@ -44,7 +48,7 @@ async def edit_book(
         book_id: int,
         db: SessionDep
 ) -> SBookRead:
-    book = await BookRepository.edit_one(book, db, id=book_id)
+    book = await BookRepository.edit_one(book, book_id, db)
     return book
 
 
@@ -53,5 +57,5 @@ async def delete_book(
         book_id: int,
         db: SessionDep
 ):
-    await BookRepository.delete_one(db, id=book_id)
+    await BookRepository.delete_one(book_id, db)
     return

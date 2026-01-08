@@ -27,8 +27,8 @@ class BookRepository:
         return all_books
 
     @classmethod
-    async def fetch_one(cls, session: AsyncSession, **filter_by):
-        stmt = select(BooksModel).filter_by(**filter_by)
+    async def fetch_one(cls, book_id, session: AsyncSession):
+        stmt = select(BooksModel).where(BooksModel.id == book_id)
 
         result = (await session.execute(stmt)).scalar_one_or_none()
 
@@ -38,8 +38,24 @@ class BookRepository:
         return result
 
     @classmethod
-    async def edit_one(cls, book: SBookAdd, session: AsyncSession, **filter_by):
-        stmt = select(BooksModel).filter_by(**filter_by)
+    async def find_by_status(cls, is_read, session: AsyncSession):
+        stmt = select(BooksModel).where(BooksModel.is_read == is_read)
+
+        result = await session.execute(stmt)
+
+        all_books = result.scalars().all()
+
+        if len(all_books) == 0:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No books with this status were found./Книг с данным статусом не найдено"
+            )
+
+        return all_books
+
+    @classmethod
+    async def edit_one(cls, book: SBookAdd, book_id, session: AsyncSession):
+        stmt = select(BooksModel).where(BooksModel.id == book_id)
 
         edited_book = (await session.execute(stmt)).scalar_one_or_none()
 
@@ -56,8 +72,8 @@ class BookRepository:
         return edited_book
 
     @classmethod
-    async def delete_one(cls, session: AsyncSession, **filter_by):
-        stmt = select(BooksModel).filter_by(**filter_by)
+    async def delete_one(cls, book_id: int, session: AsyncSession):
+        stmt = select(BooksModel).where(BooksModel.id == book_id)
 
         deleted_book = (await session.execute(stmt)).scalar_one_or_none()
 
@@ -67,9 +83,7 @@ class BookRepository:
         stmt = delete(BooksModel).where(BooksModel.id == deleted_book.id)
 
         await session.execute(stmt)
-
         await session.commit()
-
 
         return deleted_book
 
