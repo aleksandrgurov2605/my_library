@@ -37,7 +37,7 @@ async def app_test(async_session):
 
     prod_app.dependency_overrides[get_async_db] = _get_db
     yield prod_app
-    prod_app.dependency_overrides.clear()  # Очистка после тестов
+    prod_app.dependency_overrides.clear()
 
 
 @pytest_asyncio.fixture
@@ -46,13 +46,4 @@ async def client(app_test: FastAPI):
     async with AsyncClient(transport=transport, base_url="http://testserver") as c:
         yield c
 
-# @pytest_asyncio.fixture
-# def setup_test_data(db_session):
-#     db_session.add_all(
-#         [
-#             Item(id=1, name="Laptop", price=999.99),
-#             Item(id=2, name="Phone", price=499.99),
-#         ]
-#     )
-#     db_session.commit()
-#     yield
+

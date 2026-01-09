@@ -7,9 +7,6 @@ from app.core.config import settings
 if settings.MODE == "TEST":
     DATABASE_URL = settings.TEST_ASYNC_DATABASE_URL
     DATABASE_PARAMS = {"poolclass": NullPool}
-elif settings.MODE == "LITE":
-    DATABASE_URL = "sqlite+aiosqlite:///.library.db"
-    DATABASE_PARAMS = {}
 else:
     DATABASE_URL = settings.ASYNC_DATABASE_URL
     DATABASE_PARAMS = {}
