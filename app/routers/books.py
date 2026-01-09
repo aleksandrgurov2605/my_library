@@ -41,7 +41,7 @@ async def get_book_by_id(
     return books
 
 
-@books_router.put("/{id}", response_model=SBookRead)
+@books_router.put("/{book_id}", response_model=SBookRead)
 async def edit_book(
         book: SBookAdd,
         book_id: int,
@@ -51,7 +51,7 @@ async def edit_book(
     return book
 
 
-@books_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@books_router.delete("/{book_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_book(
         book_id: int,
         db: SessionDep

@@ -75,3 +75,55 @@ async def test_get_book_by_id_not_found(client):
     assert book_from_db.json()["detail"] == "Book not found/Книга не найдена"
 
 
+@pytest.mark.asyncio
+async def test_edit_book_not_found(client):
+    book = await client.post("/books", json={
+        'title': 'Test Book',
+        'author': 'Me',
+        'year': 2026,
+        'pages': 11,
+        'is_read': 'false'
+    })
+    assert book.status_code == 201
+
+    book_from_db = await client.put("/books/99", json={
+        'title': 'Edited Book',
+        'author': 'Me',
+        'year': 2026,
+        'pages': 11,
+        'is_read': 'true'
+    })
+
+    assert book_from_db.status_code == 404
+    assert book_from_db.json()["detail"] == "Book not found/Книга не найдена"
+
+
+@pytest.mark.asyncio
+async def test_delete_book(client):
+    book = await client.post("/books", json={
+        'title': 'Test Book',
+        'author': 'Me',
+        'year': 2026,
+        'pages': 11,
+        'is_read': 'false'
+    })
+    assert book.status_code == 201
+
+    book_from_db = await client.delete("/books/1")
+    assert book_from_db.status_code == 204
+
+
+@pytest.mark.asyncio
+async def test_delete_book_not_found(client):
+    book = await client.post("/books", json={
+        'title': 'Test Book',
+        'author': 'Me',
+        'year': 2026,
+        'pages': 11,
+        'is_read': 'false'
+    })
+    assert book.status_code == 201
+
+    book_from_db = await client.delete("/books/99")
+    assert book_from_db.status_code == 404
+    assert book_from_db.json()["detail"] == "Book not found/Книга не найдена"
