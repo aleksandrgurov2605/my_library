@@ -1,9 +1,8 @@
-from fastapi import APIRouter
-from starlette import status
+from fastapi import APIRouter, status
 
 from app.db.db_depends import SessionDep
 from app.repositories.books import BookRepository
-from app.schemas.books import SBookRead, SBookAdd
+from app.schemas.books import SBookAdd, SBookRead
 
 books_router = APIRouter(
     prefix="/books",
@@ -21,11 +20,11 @@ async def add_book(
     return book
 
 
-@books_router.get("")
+@books_router.get("", response_model=list[SBookRead])
 async def get_all_books(
         db: SessionDep,
         is_read: bool | None = None
-) -> list[SBookRead]:
+):
     if is_read is not None:
         books = await BookRepository.find_by_status(is_read, db)
     else:
@@ -33,21 +32,21 @@ async def get_all_books(
     return books
 
 
-@books_router.get("/{book_id}")
+@books_router.get("/{book_id}", response_model=SBookRead)
 async def get_book_by_id(
         book_id: int,
         db: SessionDep
-) -> SBookRead:
+):
     books = await BookRepository.fetch_one(book_id, db)
     return books
 
 
-@books_router.put("/{id}")
+@books_router.put("/{id}", response_model=SBookRead)
 async def edit_book(
         book: SBookAdd,
         book_id: int,
         db: SessionDep
-) -> SBookRead:
+):
     book = await BookRepository.edit_one(book, book_id, db)
     return book
 
@@ -58,4 +57,4 @@ async def delete_book(
         db: SessionDep
 ):
     await BookRepository.delete_one(book_id, db)
-    return
+    return None
