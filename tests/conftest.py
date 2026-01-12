@@ -12,6 +12,10 @@ TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"  # отдельная БД д
 
 @pytest_asyncio.fixture(scope="function")
 async def test_engine():
+    """
+    Предоставляет асинхронный 'движок' для работы с тестовой БД.
+    :return:
+    """
     engine = create_async_engine(TEST_DATABASE_URL, echo=False, future=True)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -23,11 +27,21 @@ async def test_engine():
 
 @pytest_asyncio.fixture(scope="function")
 async def async_session(test_engine):
+    """
+    Предоставляет асинхронную сессию.
+    :param test_engine:
+    :return:
+    """
     return async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
 
 
 @pytest_asyncio.fixture
 async def app_test(async_session):
+    """
+    Переопределяет зависимости, заменяя асинхронную сессию приложения на тестовую версию.
+    :param async_session:
+    :return:
+    """
     async def _get_db():
         async with async_session() as session:
             try:
@@ -42,6 +56,11 @@ async def app_test(async_session):
 
 @pytest_asyncio.fixture
 async def client(app_test: FastAPI):
+    """
+    Предоставляет клиента для выполнения тестов.
+    :param app_test:
+    :return:
+    """
     transport = ASGITransport(app=app_test)
     async with AsyncClient(transport=transport, base_url="http://testserver") as c:
         yield c
