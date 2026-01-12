@@ -8,3 +8,4 @@
 /.database.db
 /.library.db
 /new.py
+/app.log
