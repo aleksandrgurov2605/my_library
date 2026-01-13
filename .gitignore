@@ -9,3 +9,4 @@
 /.library.db
 /new.py
 /app.log
+/.docker.env
