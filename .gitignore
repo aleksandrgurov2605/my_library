@@ -7,3 +7,6 @@
 
 /.database.db
 /.library.db
+/.docker.env
+/new.py
+/app.log
