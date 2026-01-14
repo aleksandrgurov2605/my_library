@@ -1,7 +1,7 @@
 import pytest_asyncio
 from fastapi import FastAPI
-from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.db.database import Base
 from app.db.db_depends import get_async_db
@@ -38,10 +38,12 @@ async def async_session(test_engine):
 @pytest_asyncio.fixture
 async def app_test(async_session):
     """
-    Переопределяет зависимости, заменяя асинхронную сессию приложения на тестовую версию.
+    Переопределяет зависимости, заменяя асинхронную
+    сессию приложения на тестовую версию.
     :param async_session:
     :return:
     """
+
     async def _get_db():
         async with async_session() as session:
             try:

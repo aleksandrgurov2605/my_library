@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from sqlalchemy import select, delete, update
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.books import BooksModel
@@ -50,14 +50,18 @@ class BookRepository:
         result = (await session.execute(stmt)).scalar_one_or_none()
 
         if result is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found/Книга не найдена")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Book not found/Книга не найдена",
+            )
 
         return result
 
     @classmethod
     async def find_by_status(cls, is_read, session: AsyncSession):
         """
-        Возвращает книги из БД с определенным статусом прочтения, согласно параметру is_read. /
+        Возвращает книги из БД с определенным статусом прочтения,
+        согласно параметру is_read. /
         Производит фильтрацию по параметру is_read.
         :param is_read:
         :param session:
@@ -72,7 +76,8 @@ class BookRepository:
         if len(all_books) == 0:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="No books with this status were found./Книг с данным статусом не найдено"
+                detail="No books with this status were found./"
+                       "Книг с данным статусом не найдено",
             )
 
         return all_books
@@ -80,7 +85,8 @@ class BookRepository:
     @classmethod
     async def edit_one(cls, book: SBookAdd, book_id, session: AsyncSession):
         """
-        Редактирует книгу по book_id, данные из БД заменяются на данные из book: SBookAdd.
+        Редактирует книгу по book_id, данные из БД
+        заменяются на данные из book: SBookAdd.
         :param book:
         :param book_id:
         :param session:
@@ -91,10 +97,15 @@ class BookRepository:
         edited_book = (await session.execute(stmt)).scalar_one_or_none()
 
         if edited_book is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found/Книга не найдена")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Book not found/Книга не найдена",
+            )
 
         await session.execute(
-            update(BooksModel).where(BooksModel.id == edited_book.id).values(**book.model_dump())
+            update(BooksModel)
+            .where(BooksModel.id == edited_book.id)
+            .values(**book.model_dump())
         )
 
         await session.commit()
@@ -115,7 +126,10 @@ class BookRepository:
         deleted_book = (await session.execute(stmt)).scalar_one_or_none()
 
         if deleted_book is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found/Книга не найдена")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Book not found/Книга не найдена",
+            )
 
         stmt = delete(BooksModel).where(BooksModel.id == deleted_book.id)
 
@@ -123,4 +137,3 @@ class BookRepository:
         await session.commit()
 
         return deleted_book
-
