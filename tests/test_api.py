@@ -3,13 +3,16 @@ import pytest
 
 @pytest.mark.asyncio
 async def test_add_book(client):
-    r = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    r = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert r.status_code == 201
     created = r.json()
     assert created["title"] == "Test Book"
@@ -19,39 +22,48 @@ async def test_add_book(client):
 
 @pytest.mark.asyncio
 async def test_get_all_books(client):
-    book_1 = await client.post("/books", json={
-        'title': 'Test Book 1',
-        'author': 'Me?',
-        'year': 1999,
-        'pages': 11,
-        'is_read': 'true'
-    })
-    book_2 = await client.post("/books", json={
-        'title': 'Test Book 2',
-        'author': 'You?',
-        'year': 2025,
-        'pages': 100,
-        'is_read': 'false'
-    })
+    book_1 = await client.post(
+        "/books",
+        json={
+            "title": "Test Book 1",
+            "author": "Me?",
+            "year": 1999,
+            "pages": 11,
+            "is_read": "true",
+        },
+    )
+    book_2 = await client.post(
+        "/books",
+        json={
+            "title": "Test Book 2",
+            "author": "You?",
+            "year": 2025,
+            "pages": 100,
+            "is_read": "false",
+        },
+    )
     assert book_1.status_code == 201
     assert book_2.status_code == 201
 
     books_from_db = await client.get("/books")
     assert books_from_db.status_code == 200
     assert len(books_from_db.json()) == 2
-    assert books_from_db.json()[0]["title"] == 'Test Book 1'
-    assert books_from_db.json()[1]["title"] == 'Test Book 2'
+    assert books_from_db.json()[0]["title"] == "Test Book 1"
+    assert books_from_db.json()[1]["title"] == "Test Book 2"
 
 
 @pytest.mark.asyncio
 async def test_get_book_by_id(client):
-    book = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    book = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert book.status_code == 201
 
     book_from_db = await client.get("/books/1")
@@ -61,13 +73,16 @@ async def test_get_book_by_id(client):
 
 @pytest.mark.asyncio
 async def test_get_book_by_id_not_found(client):
-    book = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    book = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert book.status_code == 201
 
     book_from_db = await client.get("/books/99")
@@ -77,23 +92,29 @@ async def test_get_book_by_id_not_found(client):
 
 @pytest.mark.asyncio
 async def test_edit_book(client):
-    book = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    book = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert book.status_code == 201
     assert book.json()["title"] == "Test Book"
 
-    book_from_db = await client.put("/books/1", json={
-        'title': 'Edited Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'true'
-    })
+    book_from_db = await client.put(
+        "/books/1",
+        json={
+            "title": "Edited Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "true",
+        },
+    )
     assert book_from_db.status_code == 200
     assert book_from_db.json()["title"] == "Edited Book"
 
@@ -103,22 +124,28 @@ async def test_edit_book(client):
 
 @pytest.mark.asyncio
 async def test_edit_book_not_found(client):
-    book = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    book = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert book.status_code == 201
 
-    book_from_db = await client.put("/books/99", json={
-        'title': 'Edited Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'true'
-    })
+    book_from_db = await client.put(
+        "/books/99",
+        json={
+            "title": "Edited Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "true",
+        },
+    )
 
     assert book_from_db.status_code == 404
     assert book_from_db.json()["detail"] == "Book not found/Книга не найдена"
@@ -126,13 +153,16 @@ async def test_edit_book_not_found(client):
 
 @pytest.mark.asyncio
 async def test_delete_book(client):
-    book = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    book = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert book.status_code == 201
 
     book_from_db = await client.delete("/books/1")
@@ -141,13 +171,16 @@ async def test_delete_book(client):
 
 @pytest.mark.asyncio
 async def test_delete_book_not_found(client):
-    book = await client.post("/books", json={
-        'title': 'Test Book',
-        'author': 'Me',
-        'year': 2026,
-        'pages': 11,
-        'is_read': 'false'
-    })
+    book = await client.post(
+        "/books",
+        json={
+            "title": "Test Book",
+            "author": "Me",
+            "year": 2026,
+            "pages": 11,
+            "is_read": "false",
+        },
+    )
     assert book.status_code == 201
 
     book_from_db = await client.delete("/books/99")

@@ -1,7 +1,7 @@
 import pytest_asyncio
 from fastapi import FastAPI
-from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.db.database import Base
 from app.db.db_depends import get_async_db
@@ -42,6 +42,7 @@ async def app_test(async_session):
     :param async_session:
     :return:
     """
+
     async def _get_db():
         async with async_session() as session:
             try:
@@ -64,5 +65,3 @@ async def client(app_test: FastAPI):
     transport = ASGITransport(app=app_test)
     async with AsyncClient(transport=transport, base_url="http://testserver") as c:
         yield c
-
-

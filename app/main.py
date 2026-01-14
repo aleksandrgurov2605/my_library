@@ -17,6 +17,7 @@ async def log_requests(request: Request, call_next):
     logger.info(f"Ответ: {response.status_code} (время: {process_time} сек.)")
     return response
 
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the My Library app!"}
