@@ -15,6 +15,7 @@
 ```bash
 git clone https://github.com/aleksandrgurov2605/my_library.git
 cd my_library
+git checkout docker
 ```
 
 2. Настройка виртуального окружения
@@ -73,6 +74,7 @@ powershell -c "ir astral.sh | iex"
 ```bash
 git clone https://github.com/aleksandrgurov2605/my_library.git
 cd my_library
+git checkout dev
 ```
 
 3. Создание окружения и установка зависимостей
