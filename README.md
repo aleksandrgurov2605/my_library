@@ -5,7 +5,10 @@
 - FastAPI — веб-фреймворк.
 - SQLAlchemy — ORM для работы с базой данных.
 - Pydantic — валидация данных.
-- SQLite — база данных.
+- Alembic — миграции базы данных.
+- PostgreSQL — база данных.
+- Uvicorn — ASGI-сервер.
+- Pytest — тестирование.
 # Установка и запуск
 ## Стандартный способ. С использованием пакетного менеджера pip.
 1. Клонирование репозитория
@@ -152,6 +155,8 @@ docker compose up -d
 │   ├── conftest.py          # Настройка тестовой среды 
 │   ├── test_api.py          # Тесты эндпойнтов  
 │   └── test_mock.py         # Тесты репозитория   
+├── .docker.env                
+├── .env   
 ├── .gitignore                 
 ├── alembic.ini                
 ├── docker-compose.yml                
