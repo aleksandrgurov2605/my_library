@@ -74,7 +74,7 @@ powershell -c "ir astral.sh | iex"
 ```bash
 git clone https://github.com/aleksandrgurov2605/my_library.git
 cd my_library
-git checkout dev
+git checkout docker
 ```
 
 3. Создание окружения и установка зависимостей
